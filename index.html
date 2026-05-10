@@ -3,81 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shortlink Generator</title>
-  <link rel="stylesheet" href="/style.css" />
+  <title>Shortlink Generator — Modern UI</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Menggunakan ikon dari Lucide atau FontAwesome untuk pemanis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="dark-theme"> <!-- Default dark -->
 
-  <button class="theme-toggle" id="themeToggle">🌙</button>
+  <nav class="navbar">
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <i id="theme-icon" class="fas fa-sun"></i>
+    </div>
+  </nav>
 
   <div class="container">
-    <h1>Shortlink Generator</h1>
-    <p class="subtitle">
-      Perpendek URL panjang menjadi link yang lebih singkat, rapi, dan mudah dibagikan.
-    </p>
+    <header>
+      <h1>Shortlink <span>Generator</span></h1>
+      <p class="subtitle">
+        Perpendek URL panjang menjadi link yang lebih singkat, rapi, dan mudah dibagikan.
+      </p>
+    </header>
 
-    <div class="form-group">
-      <input id="url" placeholder="Masukkan URL yang ingin dipersingkat..." />
+    <main class="card">
+      <div class="form-group">
+        <div class="input-wrapper">
+          <i class="fas fa-link"></i>
+          <input id="url" type="url" placeholder="Masukkan URL panjang di sini..." />
+        </div>
 
-      <select id="provider">
-        <option value="tinyurl">TinyURL</option>
-        <option value="bomso">Bom.so</option>
-        <option value="byvn">ByVn</option>
-        <option value="ejuz">Ejuz</option>
-        <option value="goosu">Goo.su</option>
-        <option value="ouo">OUO</option>
-      </select>
+        <div class="select-wrapper">
+          <select id="provider">
+            <option value="tinyurl">TinyURL</option>
+            <option value="bomso">Bom.so</option>
+            <option value="byvn">ByVn</option>
+            <option value="ejuz">Ejuz</option>
+            <option value="goosu">Goo.su</option>
+            <option value="ouo">OUO</option>
+          </select>
+        </div>
 
-      <button onclick="shortenUrl()">Shorten</button>
-    </div>
+        <button onclick="shortenUrl()" class="btn-primary">
+          <span>Shorten</span>
+          <i class="fas fa-bolt"></i>
+        </button>
+      </div>
 
-    <p id="result">Hasil shortlink akan muncul di sini</p>
+      <div id="result-container" class="hidden">
+        <p id="result">Hasil shortlink akan muncul di sini</p>
+        <button onclick="copyToClipboard()" id="copy-btn" class="btn-icon">
+          <i class="fas fa-copy"></i>
+        </button>
+      </div>
+    </main>
 
-    <div class="features">
+    <section class="features">
       <div class="feature-box">
-        <h3>⚡ Super Cepat</h3>
+        <div class="icon-circle"><i class="fas fa-bolt"></i></div>
+        <h3>Super Cepat</h3>
         <p>Buat shortlink dalam hitungan detik dengan banyak provider sekaligus.</p>
       </div>
 
       <div class="feature-box">
-        <h3>🔒 Aman</h3>
+        <div class="icon-circle"><i class="fas fa-shield-alt"></i></div>
+        <h3>Aman</h3>
         <p>Backend diproses di server sehingga API tidak terlihat publik.</p>
       </div>
 
       <div class="feature-box">
-        <h3>📩 Telegram Notify</h3>
+        <div class="icon-circle"><i class="fas fa-paper-plane"></i></div>
+        <h3>Telegram Notify</h3>
         <p>Setiap user membuat shortlink, notif otomatis masuk Telegram.</p>
       </div>
-    </div>
+    </section>
 
     <footer>
-      © 2026 Shortlink Generator • Built with Vercel
+      <p>© 2026 Shortlink Generator • Built with Vercel</p>
     </footer>
   </div>
 
-  <script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const body = document.body;
-
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      body.classList.add(savedTheme);
-      toggleBtn.textContent = savedTheme === "light" ? "☀️" : "🌙";
-    }
-
-    toggleBtn.addEventListener("click", () => {
-      body.classList.toggle("light");
-
-      if (body.classList.contains("light")) {
-        localStorage.setItem("theme", "light");
-        toggleBtn.textContent = "☀️";
-      } else {
-        localStorage.setItem("theme", "dark");
-        toggleBtn.textContent = "🌙";
-      }
-    });
-  </script>
-
-  <script src="/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
