@@ -27,9 +27,47 @@ function updateThemeIcon(theme) {
     }
 }
 
+// --- LOGIKA BARU: CUSTOM DROPDOWN ---
+document.addEventListener('DOMContentLoaded', () => {
+    const customSelect = document.getElementById('customSelect');
+    if (customSelect) {
+        const selectTrigger = customSelect.querySelector('.select-trigger');
+        const options = customSelect.querySelectorAll('.option');
+        const selectedText = document.getElementById('selected-text');
+        const providerInput = document.getElementById('provider');
+
+        // Buka/Tutup dropdown saat diklik
+        selectTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            customSelect.classList.toggle('active');
+        });
+
+        // Pilih opsi
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+
+                const value = option.getAttribute('data-value');
+                const text = option.innerText;
+
+                selectedText.innerText = text;
+                providerInput.value = value; // Mengisi hidden input agar fungsi shortenUrl() tetap jalan
+                customSelect.classList.remove('active');
+            });
+        });
+
+        // Tutup dropdown jika klik di luar area
+        window.addEventListener('click', () => {
+            customSelect.classList.remove('active');
+        });
+    }
+});
+
 async function shortenUrl() {
     const urlInput = document.getElementById("url");
     const url = urlInput.value.trim();
+    // Logic provider tetap sama karena kita menggunakan hidden input ID "provider"
     const provider = document.getElementById("provider").value;
     const resultContainer = document.getElementById("result-container");
     const resultDisplay = document.getElementById("result");
