@@ -30,15 +30,20 @@
           <input id="url" type="url" placeholder="Masukkan URL panjang di sini..." />
         </div>
 
-        <div class="select-wrapper">
-          <select id="provider">
-            <option value="tinyurl">TinyURL</option>
-            <option value="bomso">Bom.so</option>
-            <option value="byvn">ByVn</option>
-            <option value="ejuz">Ejuz</option>
-            <option value="goosu">Goo.su</option>
-            <option value="ouo">OUO</option>
-          </select>
+        <div class="custom-select" id="customSelect">
+          <div class="select-trigger">
+            <span id="selected-text">TinyURL</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="select-options">
+            <div class="option selected" data-value="tinyurl">TinyURL</div>
+            <div class="option" data-value="bomso">Bom.so</div>
+            <div class="option" data-value="byvn">ByVn</div>
+            <div class="option" data-value="ejuz">Ejuz</div>
+            <div class="option" data-value="goosu">Goo.su</div>
+            <div class="option" data-value="ouo">OUO</div>
+          </div>
+          <input type="hidden" id="provider" value="tinyurl">
         </div>
 
         <button onclick="shortenUrl()" class="btn-primary">
