@@ -8,6 +8,11 @@ async function shortenUrl() {
     return;
   }
 
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    result.innerHTML = "❌ URL harus diawali http:// atau https://";
+    return;
+  }
+
   try {
     result.innerHTML = "⏳ Sedang memproses...";
 
@@ -15,18 +20,37 @@ async function shortenUrl() {
       `/api/shorten?url=${encodeURIComponent(url)}&provider=${provider}`
     );
 
-    const data = await response.json();
+    const text = await response.text();
 
-    if (data.success) {
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error("Response bukan JSON:", text);
+      result.innerHTML = "❌ API endpoint error / bukan JSON";
+      return;
+    }
+
+    if (data.success && data.shortUrl) {
       result.innerHTML = `
-        ✅ Shortlink berhasil dibuat<br><br>
-        <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>
+        <div>
+          <p>✅ Shortlink berhasil dibuat</p>
+          <br>
+          <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>
+          <br><br>
+          <button onclick="copyLink('${data.shortUrl}')">📋 Copy Link</button>
+        </div>
       `;
     } else {
-      result.innerHTML = `❌ ${data.error || "Terjadi error"}`;
+      result.innerHTML = `❌ ${data.error || "Terjadi kesalahan"}`;
     }
   } catch (error) {
     console.error(error);
     result.innerHTML = "❌ Gagal terhubung ke server";
   }
+}
+
+function copyLink(link) {
+  navigator.clipboard.writeText(link);
+  alert("Link berhasil disalin!");
 }
