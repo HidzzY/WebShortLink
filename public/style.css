@@ -116,7 +116,7 @@ h1 span {
   color: var(--text-sub);
 }
 
-input, select {
+input {
   width: 100%;
   padding: 16px 16px 16px 45px;
   border-radius: 12px;
@@ -127,8 +127,61 @@ input, select {
   font-size: 1rem;
 }
 
-select {
-  padding-left: 15px;
+/* Custom Select Styling */
+.custom-select {
+  position: relative;
+  flex: 1;
+  min-width: 160px;
+  user-select: none;
+}
+
+.select-trigger {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-main);
+  transition: all 0.3s ease;
+}
+
+.select-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.custom-select.active .select-options {
+  display: block;
+}
+
+.option {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: var(--text-sub);
+}
+
+.option:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.option.selected {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .btn-primary {
@@ -199,7 +252,7 @@ select {
   width: 60px;
   height: 60px;
   background: var(--accent);
-  border-radius: 18px; /* Lebih kotak membulat agar modern */
+  border-radius: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -229,5 +282,5 @@ footer {
 @media (max-width: 768px) {
   h1 { font-size: 2.5rem; }
   .form-group { flex-direction: column; }
-  .btn-primary { width: 100%; height: 55px; }
+  .btn-primary, .custom-select { width: 100%; }
 }
