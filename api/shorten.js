@@ -1,11 +1,21 @@
-const axios = require('axios');
+const axios = require("axios");
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({
+      success: false,
+      error: "Method not allowed"
+    });
+  }
+
   try {
-    const { url, provider } = req.query;
+    const { url, provider = "tinyurl" } = req.query;
 
     if (!url) {
-      return res.status(400).json({ error: 'URL wajib diisi' });
+      return res.status(400).json({
+        success: false,
+        error: "URL wajib diisi"
+      });
     }
 
     const providers = {
@@ -17,26 +27,69 @@ module.exports = async (req, res) => {
       ouo: `https://api.ikyyxd.my.id/tools/shortouo?url=${encodeURIComponent(url)}`
     };
 
-    const apiUrl = providers[provider || 'tinyurl'];
+    const apiUrl = providers[provider];
+
+    if (!apiUrl) {
+      return res.status(400).json({
+        success: false,
+        error: "Provider tidak valid"
+      });
+    }
+
     const response = await axios.get(apiUrl);
     const data = response.data;
 
-    let shortUrl = data.short || data.result?.short || data.result?.shorturl || data.result?.short_url || data.result;
+    const shortUrl =
+      data.short ||
+      data.result?.short ||
+      data.result?.shorturl ||
+      data.result?.short_url ||
+      data.result;
 
-    const message = `✨ SHORTLINK BARU\n\n🔗 Original: ${url}\n⚡ Result: ${shortUrl}\n🛠 Provider: ${provider}`;
+    if (!shortUrl) {
+      return res.status(500).json({
+        success: false,
+        error: "Gagal mengambil shortlink"
+      });
+    }
 
-    await axios.get(
-      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-      {
-        params: {
-          chat_id: process.env.CHAT_ID,
-          text: message
+    const message =
+`✨ SHORTLINK BARU
+
+🔗 Original:
+${url}
+
+⚡ Shortlink:
+${shortUrl}
+
+🛠 Provider:
+${provider}`;
+
+    try {
+      await axios.get(
+        `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+        {
+          params: {
+            chat_id: process.env.CHAT_ID,
+            text: message
+          }
         }
-      }
-    );
+      );
+    } catch (telegramError) {
+      console.log("Telegram error:", telegramError.message);
+    }
 
-    res.status(200).json({ success: true, shortUrl });
-  } catch (err) {
-    res.status(500).json({ error: 'Gagal memproses shortlink' });
+    return res.status(200).json({
+      success: true,
+      shortUrl
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      error: "Gagal memproses shortlink"
+    });
   }
 };
