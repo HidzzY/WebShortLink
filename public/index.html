@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shortlink Generator</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>Shortlink Generator</h1>
+    <p class="subtitle">
+      Perpendek URL panjang menjadi link yang lebih singkat, rapi, dan mudah dibagikan.
+    </p>
+
+    <div class="form-group">
+      <input id="url" placeholder="Masukkan URL yang ingin dipersingkat..." />
+
+      <select id="provider">
+        <option value="tinyurl">TinyURL</option>
+        <option value="bomso">Bom.so</option>
+        <option value="byvn">ByVn</option>
+        <option value="ejuz">Ejuz</option>
+        <option value="goosu">Goo.su</option>
+        <option value="ouo">OUO</option>
+      </select>
+
+      <button onclick="shortenUrl()">Shorten</button>
+    </div>
+
+    <p id="result">Hasil shortlink akan muncul di sini</p>
+
+    <div class="features">
+      <div class="feature-box">
+        <h3>⚡ Super Cepat</h3>
+        <p>Buat shortlink dalam hitungan detik dengan banyak provider sekaligus.</p>
+      </div>
+
+      <div class="feature-box">
+        <h3>🔒 Aman</h3>
+        <p>Backend diproses di server sehingga API tidak terlihat publik.</p>
+      </div>
+
+      <div class="feature-box">
+        <h3>📩 Telegram Notify</h3>
+        <p>Setiap user membuat shortlink, notifikasi otomatis masuk Telegram.</p>
+      </div>
+    </div>
+
+    <footer>
+      © 2026 Shortlink Generator • Built with Vercel
+    </footer>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
