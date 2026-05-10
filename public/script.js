@@ -1,56 +1,108 @@
-async function shortenUrl() {
-  const url = document.getElementById("url").value.trim();
-  const provider = document.getElementById("provider").value;
-  const result = document.getElementById("result");
+const body = document.body;
+const themeIcon = document.getElementById('theme-icon');
 
-  if (!url) {
-    result.innerHTML = "❌ Masukkan URL terlebih dahulu";
-    return;
-  }
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme') || 'dark-theme';
+    body.className = savedTheme;
+    updateThemeIcon(savedTheme);
+});
 
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    result.innerHTML = "❌ URL harus diawali http:// atau https://";
-    return;
-  }
-
-  try {
-    result.innerHTML = "⏳ Sedang memproses...";
-
-    const response = await fetch(
-      `/api/shorten?url=${encodeURIComponent(url)}&provider=${provider}`
-    );
-
-    const text = await response.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      console.error("Response bukan JSON:", text);
-      result.innerHTML = "❌ API endpoint error / bukan JSON";
-      return;
-    }
-
-    if (data.success && data.shortUrl) {
-      result.innerHTML = `
-        <div>
-          <p>✅ Shortlink berhasil dibuat</p>
-          <br>
-          <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>
-          <br><br>
-          <button onclick="copyLink('${data.shortUrl}')">📋 Copy Link</button>
-        </div>
-      `;
+function toggleTheme() {
+    if (body.classList.contains('dark-theme')) {
+        body.className = 'light-theme';
+        localStorage.setItem('theme', 'light-theme');
+        updateThemeIcon('light-theme');
     } else {
-      result.innerHTML = `❌ ${data.error || "Terjadi kesalahan"}`;
+        body.className = 'dark-theme';
+        localStorage.setItem('theme', 'dark-theme');
+        updateThemeIcon('dark-theme');
     }
-  } catch (error) {
-    console.error(error);
-    result.innerHTML = "❌ Gagal terhubung ke server";
-  }
+}
+
+function updateThemeIcon(theme) {
+    if (theme === 'dark-theme') {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+    } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+    }
+}
+
+async function shortenUrl() {
+    const urlInput = document.getElementById("url");
+    const url = urlInput.value.trim();
+    const provider = document.getElementById("provider").value;
+    const resultContainer = document.getElementById("result-container");
+    const resultDisplay = document.getElementById("result");
+
+    if (!url) {
+        showError("❌ Masukkan URL terlebih dahulu");
+        return;
+    }
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        showError("❌ URL harus diawali http:// atau https://");
+        return;
+    }
+
+    try {
+        resultContainer.classList.remove('hidden');
+        resultDisplay.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sedang memproses...`;
+
+        const response = await fetch(
+            `/api/shorten?url=${encodeURIComponent(url)}&provider=${provider}`
+        );
+
+        const text = await response.text();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch {
+            console.error("Response bukan JSON:", text);
+            showError("❌ API endpoint error / format tidak valid");
+            return;
+        }
+
+        if (data.success && data.shortUrl) {
+            resultDisplay.innerHTML = `
+                <div class="success-result">
+                    <span style="display:block; font-size:0.8rem; color:var(--text-sub); margin-bottom:5px;">✅ Berhasil:</span>
+                    <a href="${data.shortUrl}" id="shortened-link" target="_blank">${data.shortUrl}</a>
+                </div>
+            `;
+            
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.onclick = () => copyLink(data.shortUrl);
+        } else {
+            showError(`❌ ${data.error || "Terjadi kesalahan"}`);
+        }
+    } catch (error) {
+        console.error(error);
+        showError("❌ Gagal terhubung ke server");
+    }
 }
 
 function copyLink(link) {
-  navigator.clipboard.writeText(link);
-  alert("Link berhasil disalin!");
+    if (!link) return;
+    
+    navigator.clipboard.writeText(link).then(() => {
+        const copyBtn = document.getElementById('copy-btn');
+        const originalIcon = copyBtn.innerHTML;
+        
+        copyBtn.innerHTML = `<i class="fas fa-check" style="color: #10b981;"></i>`;
+        setTimeout(() => {
+            copyBtn.innerHTML = originalIcon;
+        }, 2000);
+        
+    }).catch(err => {
+        console.error('Gagal menyalin: ', err);
+    });
+}
+
+function showError(message) {
+    const resultContainer = document.getElementById("result-container");
+    const resultDisplay = document.getElementById("result");
+    
+    resultContainer.classList.remove('hidden');
+    resultDisplay.innerHTML = `<span style="color: #ef4444;">${message}</span>`;
 }
