@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shortlink Generator</title>
+  <link rel="stylesheet" href="public/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Shortlink Generator</h1>
+    <input id="url" placeholder="Masukkan URL" />
+    <select id="provider">
+      <option value="tinyurl">TinyURL</option>
+      <option value="bomso">Bom.so</option>
+      <option value="byvn">ByVn</option>
+      <option value="ejuz">Ejuz</option>
+      <option value="goosu">Goo.su</option>
+      <option value="ouo">OUO</option>
+    </select>
+    <button onclick="shortenUrl()">Shorten</button>
+    <p id="result"></p>
+  </div>
+  <script src="public/script.js"></script>
+</body>
+</html>
