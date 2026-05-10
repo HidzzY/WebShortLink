@@ -8,6 +8,8 @@
 </head>
 <body>
 
+  <button class="theme-toggle" id="themeToggle">🌙</button>
+
   <div class="container">
     <h1>Shortlink Generator</h1>
     <p class="subtitle">
@@ -52,6 +54,29 @@
       © 2026 Shortlink Generator • Built with Vercel
     </footer>
   </div>
+
+  <script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const body = document.body;
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      body.classList.add(savedTheme);
+      toggleBtn.textContent = savedTheme === "light" ? "☀️" : "🌙";
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      body.classList.toggle("light");
+
+      if (body.classList.contains("light")) {
+        localStorage.setItem("theme", "light");
+        toggleBtn.textContent = "☀️";
+      } else {
+        localStorage.setItem("theme", "dark");
+        toggleBtn.textContent = "🌙";
+      }
+    });
+  </script>
 
   <script src="/script.js"></script>
 </body>
